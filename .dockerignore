@@ -1,0 +1,35 @@
+# Pliki specyficzne dla systemu operacyjnego
+.DS_Store
+Thumbs.db
+
+# Pliki i foldery Gita
+.git
+.gitignore
+.gitattributes
+
+# Pliki specyficzne dla środowiska lokalnego
+.env
+.env.example
+
+# Foldery i pliki związane z zależnościami, które będą instalowane w Dockerze
+/vendor
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# Dokumentacja i pliki testowe
+/tests
+phpunit.xml
+
+# Pliki Dockera
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Pliki logów Laravela
+/storage/logs/*.log
+
+# Pamięć podręczna Laravela
+/bootstrap/cache/*.php
+
+.vscode/
