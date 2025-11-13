@@ -13,7 +13,9 @@ class SaveBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->role === UserRole::ADMIN;
+        $user = $this->user();
+        $val = $user->role === UserRole::ADMIN;
+        return $val;
     }
 
     /**

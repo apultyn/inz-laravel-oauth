@@ -5,9 +5,10 @@ return [
     'client_id' => env('KEYCLOAK_CLIENT_ID', ''),
     'user_provider_credential' => 'email',
     'append_decoded_token' => true,
-    'load_user_from_database' => true,
+    'load_user_from_database' => false,
     'token_principal_attribute' => 'email',
     'create_user_if_not_exists' => true,
+    'ignore_resources_validation' => true,
 
     'user_mapping' => [
         'email' => 'email',
@@ -20,8 +21,6 @@ return [
     'user_provider_custom_retrieve_method' => env('KEYCLOAK_USER_PROVIDER_CUSTOM_RETRIEVE_METHOD', null),
 
     'allowed_resources' => env('KEYCLOAK_ALLOWED_RESOURCES', null),
-
-    'ignore_resources_validation' => env('KEYCLOAK_IGNORE_RESOURCES_VALIDATION', false),
 
     'leeway' => env('KEYCLOAK_LEEWAY', 0),
 

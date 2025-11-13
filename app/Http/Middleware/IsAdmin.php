@@ -18,10 +18,10 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::hasRole('BOOK_ADMIN')) {
-            return $next($request);
+        if (!$request->user || !$request->user()->hasRole('BOOK_ADMIN')) {
+            response()->json(['message' => 'Forbidden: Requires admin privileges.'], 403);
         }
 
-        return response()->json(['message' => 'Forbidden: Requires admin privileges.'], 403);
+        return $next($request);
     }
 }

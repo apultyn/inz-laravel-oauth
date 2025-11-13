@@ -21,6 +21,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'email',
+        'role',
+        'keycloak_id'
     ];
 
     /**
@@ -29,7 +31,6 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 
@@ -42,11 +43,17 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'role' => UserRole::class,
         ];
     }
 
     public function reviews(): HasMany
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
     }
 }
