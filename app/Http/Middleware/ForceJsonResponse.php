@@ -16,7 +16,6 @@ class ForceJsonResponse
     public function handle(Request $request, Closure $next): Response
     {
         if ($request->is('api/*')) {
-            // Ustawiamy nagłówek, informując aplikację, że oczekujemy odpowiedzi JSON
             $request->headers->set('Accept', 'application/json');
         }
 

@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
+
+use Spatie\Permission\Models\Role;
+
 use App\Models\User;
 
 class SyncKeycloakUser
@@ -21,23 +24,33 @@ class SyncKeycloakUser
             $tokenUser = Auth::user();
             $tokenData = $tokenUser->token;
             $realmAccess = $tokenData->realm_access ?? [];
-            $roles = $realmAccess->roles ?? [];
+            $incomingRoles = $realmAccess->roles ?? [];
 
-            $userRole = 'BOOK_USER';
-            if (in_array('BOOK_ADMIN', $roles)) {
-                $userRole = 'BOOK_ADMIN';
-            } elseif (in_array('BOOK_USER', $roles)) {
-                $userRole = 'BOOK_USER';
-            }
+            $rolesToSync = array_values(array_filter($incomingRoles, function ($role) {
+                return str_starts_with($role, "BOOK_");
+            }));
 
-            $localUser = User::updateOrCreate(
+            $localUser = User::firstOrCreate(
                 ['keycloak_id' => $tokenData->sub],
                 [
                     'email' => $tokenData->email,
-                    'role' => $userRole,
-                    'keycloak_id' => $tokenData->sub
                 ]
             );
+            $currentRoleNames = $localUser->getRoleNames()->toArray();
+            sort($currentRoleNames);
+            $rolesToSyncSorted = $rolesToSync;
+            sort($rolesToSyncSorted);
+
+            if ($currentRoleNames !== $rolesToSyncSorted) {
+                foreach ($rolesToSync as $roleName) {
+                    Role::firstOrCreate([
+                        'name' => $roleName,
+                        'guard_name' => 'api'
+                    ]);
+                }
+                $localUser->syncRoles($rolesToSync);
+            }
+
             Auth::setUser($localUser);
         }
 

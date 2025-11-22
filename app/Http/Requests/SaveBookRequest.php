@@ -3,7 +3,6 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Enums\UserRole;
 use Illuminate\Validation\Rule;
 
 class SaveBookRequest extends FormRequest
@@ -13,9 +12,7 @@ class SaveBookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $user = $this->user();
-        $val = $user->role === UserRole::ADMIN;
-        return $val;
+        return $this->user()->HasRole("BOOK_ADMIN");
     }
 
     /**

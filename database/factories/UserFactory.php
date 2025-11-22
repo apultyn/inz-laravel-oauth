@@ -4,7 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
-use App\Enums\UserRole;
+use App\Models\User;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
@@ -26,20 +26,23 @@ class UserFactory extends Factory
         return [
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => UserRole::USER
         ];
+    }
+
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('BOOK_USER');
+        });
     }
 
     public function admin(): static
     {
-        return $this->state(fn(array $attributes) => [
-            'role' => UserRole::ADMIN
-        ]);
+        return $this->afterCreating(function (User $user) {
+            $user->assignRole('BOOK_ADMIN');
+        });
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
     public function unverified(): static
     {
         return $this->state(fn(array $attributes) => [
