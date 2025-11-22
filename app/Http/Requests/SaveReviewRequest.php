@@ -12,7 +12,7 @@ class SaveReviewRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->HasRole("BOOK_USER");
     }
 
     /**

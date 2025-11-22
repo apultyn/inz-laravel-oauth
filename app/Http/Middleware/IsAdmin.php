@@ -3,8 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 
 class IsAdmin
@@ -16,10 +17,12 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!$request->user || !$request->user()->hasRole('BOOK_ADMIN')) {
-            response()->json(['message' => 'Forbidden: Requires admin privileges.'], 403);
+        if (
+            Auth::guard()->check() && Auth::guard()->user()->hasRole("BOOK_ADMIN")
+        ) {
+            return $next($request);
         }
 
-        return $next($request);
+        return response()->json(['message' => 'Forbidden: Requires admin privileges.'], 403);
     }
 }

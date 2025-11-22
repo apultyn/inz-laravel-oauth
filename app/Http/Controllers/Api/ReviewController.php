@@ -8,7 +8,9 @@ use App\Services\ReviewService;
 use App\Http\Resources\ReviewResource;
 use App\Http\Requests\SaveReviewRequest;
 use App\Http\Requests\UpdateReviewRequest;
+
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
@@ -27,7 +29,7 @@ class ReviewController extends Controller
         $validatedData = $req->validated();
 
         $data = array_merge($validatedData, [
-            'user_id' => auth()->id()
+            'user_id' => Auth::guard()->id()
         ]);
 
         $review = $this->reviewService->createReview($data);

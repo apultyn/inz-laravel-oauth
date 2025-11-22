@@ -17,7 +17,7 @@ class BookFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => ucwords($this->faker->words(3, true)),
             'author' => $this->faker->name
         ];
     }
