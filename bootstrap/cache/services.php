@@ -32,8 +32,7 @@
     28 => 'Termwind\\Laravel\\TermwindServiceProvider',
     29 => 'KeycloakGuard\\KeycloakGuardServiceProvider',
     30 => 'Spatie\\Permission\\PermissionServiceProvider',
-    31 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
-    32 => 'App\\Providers\\AppServiceProvider',
+    31 => 'App\\Providers\\AppServiceProvider',
   ),
   'eager' => 
   array (
@@ -53,8 +52,7 @@
     13 => 'Termwind\\Laravel\\TermwindServiceProvider',
     14 => 'KeycloakGuard\\KeycloakGuardServiceProvider',
     15 => 'Spatie\\Permission\\PermissionServiceProvider',
-    16 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
-    17 => 'App\\Providers\\AppServiceProvider',
+    16 => 'App\\Providers\\AppServiceProvider',
   ),
   'deferred' => 
   array (

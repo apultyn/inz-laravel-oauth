@@ -14,7 +14,6 @@
         "laravel/tinker": "^2.10.1",
         "robsontenorio/laravel-keycloak-guard": "^1.6",
         "spatie/laravel-permission": "^6.23",
-        "tymon/jwt-auth": "^2.2",
         "fakerphp/faker": "^1.23"
     },
     "require-dev": {

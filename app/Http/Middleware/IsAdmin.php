@@ -17,12 +17,14 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (
-            Auth::guard()->check() && Auth::guard()->user()->hasRole("BOOK_ADMIN")
-        ) {
-            return $next($request);
+        if (!Auth::guard()->check()) {
+            return response()->json(['message' => 'Unauthorized.'], 401);
         }
 
-        return response()->json(['message' => 'Forbidden: Requires admin privileges.'], 403);
+        if (!Auth::guard()->user()->HasRole("BOOK_ADMIN")) {
+            return response()->json(['message' => 'Forbidden: Requires admin privileges.'], 403);
+        }
+
+        return $next($request);
     }
 }
