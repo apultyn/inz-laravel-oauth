@@ -26,22 +26,21 @@ class SyncKeycloakUser
             $realmAccess = $tokenData->realm_access ?? [];
             $incomingRoles = $realmAccess->roles ?? [];
 
-            $rolesToSync = array_values(array_filter($incomingRoles, function ($role) {
-                return str_starts_with($role, "BOOK_");
-            }));
-
             $localUser = User::firstOrCreate(
                 ['keycloak_id' => $tokenData->sub],
                 [
                     'email' => $tokenData->email,
                 ]
             );
-            $currentRoleNames = $localUser->getRoleNames()->toArray();
-            sort($currentRoleNames);
-            $rolesToSyncSorted = $rolesToSync;
-            sort($rolesToSyncSorted);
 
-            if ($currentRoleNames !== $rolesToSyncSorted) {
+            $rolesToSync = $this->filterRoles($incomingRoles);
+
+            if (
+                !$this->compareRoleSets(
+                    $localUser->getRoleNames()->toArray(),
+                    $rolesToSync
+                )
+            ) {
                 foreach ($rolesToSync as $roleName) {
                     Role::firstOrCreate([
                         'name' => $roleName,
@@ -55,5 +54,20 @@ class SyncKeycloakUser
         }
 
         return $next($request);
+    }
+
+    private function filterRoles(array $incomingRoles): array
+    {
+        return array_values(array_filter($incomingRoles, function ($role) {
+            return str_starts_with($role, "BOOK_");
+        }));
+    }
+
+    private function compareRoleSets(array $currentRoles, array $rolesToSync): bool
+    {
+        sort($currentRoles);
+        sort($rolesToSync);
+
+        return $currentRoles === $rolesToSync;
     }
 }
