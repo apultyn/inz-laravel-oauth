@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Auth\Middleware\Authenticate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -7,6 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Auth\AuthenticationException;
 
 use App\Http\Middleware\SyncKeycloakUser;
+use App\Http\Middleware\CheckRole;
+use App\Http\Middleware\ForceJsonResponse;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,11 +23,19 @@ return Application::configure(basePath: dirname(__DIR__))
             SyncKeycloakUser::class,
         ]);
         $middleware->api(prepend: [
-            \App\Http\Middleware\ForceJsonResponse::class,
+            ForceJsonResponse::class,
         ]);
 
         $middleware->alias([
-            'admin' => \App\Http\Middleware\IsAdmin::class,
+            'role' => CheckRole::class,
+        ]);
+
+        $middleware->priority([
+            ForceJsonResponse::class,
+            Authenticate::class,
+            SyncKeycloakUser::class,
+            CheckRole::class,
+            SubstituteBindings::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

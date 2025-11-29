@@ -28,9 +28,12 @@ class ReviewController extends Controller
     {
         $validatedData = $req->validated();
 
-        $data = array_merge($validatedData, [
-            'user_id' => Auth::guard()->id()
-        ]);
+        $data = [
+            'book_id' => $validatedData['bookId'],
+            'stars' => $validatedData['stars'],
+            'comment' => $validatedData['comment'] ?? null,
+            'user_id' => Auth::guard('api')->id(),
+        ];
 
         $review = $this->reviewService->createReview($data);
         return response()->json(new ReviewResource($review), 201);

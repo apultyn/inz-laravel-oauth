@@ -9,11 +9,11 @@ Route::get('/books/{book}', [BookController::class, 'show']);
 Route::get('/reviews', [ReviewController::class, 'index']);
 Route::get('/reviews/{review}', [ReviewController::class, 'show']);
 
-Route::middleware('auth:api')->group(function () {
+Route::middleware(['auth:api', 'role:BOOK_USER'])->group(function () {
     Route::post('/reviews', [ReviewController::class, 'store']);
 });
 
-Route::middleware(['auth:api', 'admin'])->group(function () {
+Route::middleware(['auth:api', 'role:BOOK_ADMIN'])->group(function () {
     Route::post('/books', [BookController::class, 'store']);
     Route::patch('/books/{book}', [BookController::class, 'update']);
     Route::delete('/books/{book}', [BookController::class, 'destroy']);
